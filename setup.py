@@ -24,7 +24,7 @@ setup(
     long_description=read('README.rst'),
     py_modules=['pytest_icdiff'],
     python_requires='>=3.6',
-    install_requires=['pytest', 'icdiff'],
+    install_requires=['pytest', 'icdiff', 'pprintpp'],
     classifiers=[
         'Development Status :: 4 - Beta',
         'Framework :: Pytest',
