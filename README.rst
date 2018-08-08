@@ -23,7 +23,8 @@ Usage
 
 Once you've installed it, ``pytest`` will produce nice colourised diffs for any `assert ==` :
 
-![Example colourised diff](./example_output.png?raw=true "Example colourised diff")
+.. image:: example_output.png?raw=true
+   :alt: example colourised diff
 
 Issues and PRs welcome.
 
