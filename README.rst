@@ -21,7 +21,7 @@ Usage
 
     pip install pytest-icdiff
 
-Once you've installed it, ``pytest`` will find and run tests written using the icdiff *Given/When/should* conventions.
+Once you've installed it, ``pytest`` will produce nice colourised diffs for any `assert ==` 
 
 Issues and PRs welcome.
 
