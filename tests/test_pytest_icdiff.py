@@ -106,30 +106,3 @@ def test_only_works_for_equals(testdir):
     assert GREEN_ON not in output
     assert YELLOW_ON not in output
     assert COLOR_OFF not in output
-
-
-def test_for_demo(testdir):
-    one = {
-        'key1': 'value 1',
-        'key2': 'value 2',
-        'key4': 'value 4',
-        'key5': 'value 5',
-    }
-    two = {
-        'key1': 'value 1',
-        'key2': 'value 2',
-        'key3': 'value 3',
-        'key4': 'value 4',
-        'key5': 'value 6',
-        'key6': 'value 6',
-    }
-    testdir.makepyfile(
-        f"""
-        def test_comparing_two_dicts():
-            assert {one!r} == {two!r}
-        """
-    )
-    output = testdir.runpytest('-vv').stdout.str()
-    assert {'key1': 'value 1', 'key2': 'value 2', 'key4': 'value 4', 'key5': 'value 5'} == {'key1': 'value 1', 'key2': 'value 2', 'key3': 'value 3', 'key4': 'value 4', 'key5': 'value 6'}
-    assert 'foo' in output
-
