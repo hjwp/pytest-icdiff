@@ -14,20 +14,21 @@ pytest-icdiff
     :target: https://travis-ci.org/hjwp/pytest-icdiff
     :alt: See Build Status on Travis CI
 
-Better diffs in pytest assertion error messages using  `ICDiff`_ framework using `pytest`_
+Better diffs in `pytest`_ assertion error messages using  `ICDiff`_.
 
 Usage
 -----
 
     pip install pytest-icdiff
 
-Once you've installed it, ``pytest`` will produce nice colourised diffs for any `assert ==` :
+Once you've installed it, ``pytest`` will produce nice colourised diffs for any ``assert ==`` :
 
 .. image:: example_output.png?raw=true
    :alt: example colourised diff
 
 Issues and PRs welcome.
 
+Thanks to the maintainers of `ICDiff`_ and also `pprintpp`_ !
 
 License
 -------
@@ -43,4 +44,5 @@ This `pytest`_ plugin was generated with `Cookiecutter`_ along with `@hackebrot`
 .. _`pytest`: https://github.com/pytest-dev/pytest
 .. _`Unlicense`: http://unlicense.org
 .. _`icdiff`: https://www.jefftk.com/icdiff
+.. _`pprintpp`: https://github.com/wolever/pprintpp
 
