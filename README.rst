@@ -21,7 +21,9 @@ Usage
 
     pip install pytest-icdiff
 
-Once you've installed it, ``pytest`` will produce nice colourised diffs for any `assert ==` 
+Once you've installed it, ``pytest`` will produce nice colourised diffs for any `assert ==` :
+
+![Example colourised diff](./example_output.png?raw=true "Example colourised diff")
 
 Issues and PRs welcome.
 
