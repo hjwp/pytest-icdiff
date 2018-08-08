@@ -13,13 +13,13 @@ def read(fname):
 
 setup(
     name='pytest-icdiff',
-    version='0.1.3',
+    version='0.0.1',
     author='Harry Percival',
     author_email='obeythetestinggoat@gmail.com',
     maintainer='Harry Percival',
     maintainer_email='obeythetestinggoat@gmail.com',
     license='GNU GPL v3.0',
-    url='https://github.com/madedotcom/pytest-icdiff',
+    url='https://github.com/hjwp/pytest-icdiff',
     description='use icdiff for better error messages in pytest assertions',
     long_description=read('README.rst'),
     py_modules=['pytest_icdiff'],
