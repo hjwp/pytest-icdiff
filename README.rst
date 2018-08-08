@@ -10,8 +10,8 @@ pytest-icdiff
     :target: https://pypi.org/project/pytest-icdiff
     :alt: Python versions
 
-.. image:: https://travis-ci.org/madedotcom/pytest-icdiff.svg?branch=master
-    :target: https://travis-ci.org/madedotcom/pytest-icdiff
+.. image:: https://travis-ci.org/hjwp/pytest-icdiff.svg?branch=master
+    :target: https://travis-ci.org/hjwp/pytest-icdiff
     :alt: See Build Status on Travis CI
 
 Better diffs in pytest assertion error messages using  `ICDiff`_ framework using `pytest`_
