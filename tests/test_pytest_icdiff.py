@@ -82,14 +82,13 @@ def test_long(testdir):
             assert {one!r} == {two!r}
         """
     )
-    output = testdir.runpytest('-vv').stdout.str()
+    output = testdir.runpytest('-vv', '--color=yes').stdout.str()
     expected_lines = icdiff.ConsoleDiff().make_table(
-        pformat(one).split('\n'),
-        pformat(two).split('\n')
+        pformat(one).splitlines(),
+        pformat(two).splitlines(),
     )
     for l in expected_lines:
         assert l.strip() in output
-
 
 
 def test_only_works_for_equals(testdir):
@@ -106,3 +105,22 @@ def test_only_works_for_equals(testdir):
     assert GREEN_ON not in output
     assert YELLOW_ON not in output
     assert COLOR_OFF not in output
+
+
+def test_prepends_icdiff_output_lines_with_color_off(testdir):
+    one = ['hello', 'hello']
+    two = ['bello', 'hella']
+    testdir.makepyfile(
+        f"""
+        def test_thing():
+            assert {one!r} == {two!r}
+        """
+    )
+    output = testdir.runpytest('--color=yes').stdout.str()
+    expected_lines = icdiff.ConsoleDiff().make_table(
+        pformat(one).splitlines(),
+        pformat(two).splitlines(),
+    )
+    print('\n'.join(repr(l) for l in output.splitlines()))
+    for l in expected_lines:
+        assert f'{COLOR_OFF}{l}'.strip() in output
