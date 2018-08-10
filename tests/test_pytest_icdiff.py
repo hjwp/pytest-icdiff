@@ -35,7 +35,7 @@ def test_short(testdir):
 def test_long(testdir):
     one = {
         'currency': 'USD',
-        'default_UK_warehouse': 'iforce',
+        'default_UK_warehouse': 'xforce',
         'default_incoterm': 'EXW',
         'name': 'John Doe',
         'payment_term': '30% deposit, 70% balance',
