@@ -124,3 +124,15 @@ def test_prepends_icdiff_output_lines_with_color_off(testdir):
     print('\n'.join(repr(l) for l in output.splitlines()))
     for l in expected_lines:
         assert f'{COLOR_OFF}{l}'.strip() in output
+
+
+def test_helpful_default_drilldown_stuff_is_still_there(testdir):
+    testdir.makepyfile(
+        """
+        def test_a():
+            assert len([1, 2, 3]) == len([1, 2])
+        """
+    )
+    output = testdir.runpytest().stdout.str()
+    assert "where 3 = len([1, 2, 3])" in output
+    assert "2 = len([1, 2])" in output
