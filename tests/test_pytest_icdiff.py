@@ -1,11 +1,13 @@
 import icdiff
+import re
 from pprintpp import pformat
 
 YELLOW_ON = '\x1b[1;33m'
 COLOR_OFF = '\x1b[m'
 GREEN_ON = '\x1b[1;32m'
+ANSI_ESCAPE_RE = re.compile(r'(\x9B|\x1B\[)[0-?]*[ -/]*[@-~]')
 
-def test_short(testdir):
+def test_short_dict(testdir):
     one = {
         1: "the number one",
         2: "the number two",
@@ -32,7 +34,7 @@ def test_short(testdir):
     assert three_diff in output
 
 
-def test_long(testdir):
+def test_long_dict(testdir):
     one = {
         'currency': 'USD',
         'default_UK_warehouse': 'xforce',
@@ -107,6 +109,14 @@ def test_only_works_for_equals(testdir):
     assert COLOR_OFF not in output
 
 
+def _assert_line_in_ignoring_whitespace(expected, block):
+    parts = expected.split()
+    for line in block.splitlines():
+        if all(part in line for part in parts):
+            return True
+    assert False, f'could not find {expected} in:\n{block}'
+
+
 def test_prepends_icdiff_output_lines_with_color_off(testdir):
     one = ['hello', 'hello']
     two = ['bello', 'hella']
@@ -117,10 +127,24 @@ def test_prepends_icdiff_output_lines_with_color_off(testdir):
         """
     )
     output = testdir.runpytest('--color=yes').stdout.str()
-    expected_lines = icdiff.ConsoleDiff().make_table(
+    expected = list(icdiff.ConsoleDiff().make_table(
         pformat(one).splitlines(),
         pformat(two).splitlines(),
-    )
+    ))
+    assert len(expected) == 1
     print('\n'.join(repr(l) for l in output.splitlines()))
-    for l in expected_lines:
-        assert f'{COLOR_OFF}{l}'.strip() in output
+    _assert_line_in_ignoring_whitespace(expected[0], output)
+
+
+def test_short_strings_arent_far_apart(testdir):
+    testdir.makepyfile(
+        f"""
+        def test_thing():
+            assert 'foo' == 'fob'
+        """
+    )
+    output = testdir.runpytest('--color=no').stdout.str()
+    print(repr(output))
+    compare_line = next(l for l in output.splitlines() if COLOR_OFF in l)
+    compare_line = ANSI_ESCAPE_RE.sub('', compare_line)
+    assert compare_line == "E         'foo'       'fob'"
