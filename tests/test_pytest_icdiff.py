@@ -2,6 +2,8 @@ import icdiff
 import re
 from pprintpp import pformat
 
+import pytest_icdiff
+
 YELLOW_ON = '\x1b[1;33m'
 COLOR_OFF = '\x1b[m'
 GREEN_ON = '\x1b[1;32m'
@@ -85,7 +87,7 @@ def test_long_dict(testdir):
         """
     )
     output = testdir.runpytest('-vv', '--color=yes').stdout.str()
-    expected_lines = icdiff.ConsoleDiff().make_table(
+    expected_lines = icdiff.ConsoleDiff(cols=pytest_icdiff.COLS).make_table(
         pformat(one).splitlines(),
         pformat(two).splitlines(),
     )
@@ -144,7 +146,25 @@ def test_short_strings_arent_far_apart(testdir):
         """
     )
     output = testdir.runpytest('--color=no').stdout.str()
-    print(repr(output))
     compare_line = next(l for l in output.splitlines() if COLOR_OFF in l)
     compare_line = ANSI_ESCAPE_RE.sub('', compare_line)
     assert compare_line == "E         'foo'       'fob'"
+
+
+
+def test_wide_strings_dont_wrap_crazily(testdir):
+    testdir.makepyfile(
+        f"""
+        def test_thing():
+            foo = 'foo' * 20 + 'a'
+            bar = 'foo' * 20 + 'b'
+            assert foo == bar
+        """
+    )
+    output = testdir.runpytest().stdout.str()
+    print(repr(output))
+    assert 'foof ' not in output
+    assert re.search(r"'\s+'", output)
+    E_lines = [l for l in output.splitlines() if l.strip().startswith('E')]
+    assert len(E_lines) == 2
+
