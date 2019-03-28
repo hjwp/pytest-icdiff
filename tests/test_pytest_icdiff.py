@@ -1,7 +1,6 @@
 import icdiff
 import re
 from pprintpp import pformat
-
 import pytest_icdiff
 
 YELLOW_ON = '\x1b[1;33m'
@@ -26,14 +25,17 @@ def test_short_dict(testdir):
         """
     )
     output = testdir.runpytest().stdout.str()
-    two_diff = (
-        f"2: 'the number t{YELLOW_ON}wo{COLOR_OFF}',"
-        f"                    "
-        f"2: 'the number t{YELLOW_ON}hree{COLOR_OFF}',"
-    )
-    assert two_diff in output
-    three_diff = f"{GREEN_ON}    6: [1, 2, 3],{COLOR_OFF}"
-    assert three_diff in output
+    print(repr(output))
+    two_left = f"'the number t{YELLOW_ON}wo{COLOR_OFF}'"
+    two_right = f"'the number t{YELLOW_ON}hree{COLOR_OFF}'"
+    assert two_left in output
+    assert two_right in output
+    if pytest_icdiff.COLS < 90:
+        three_diff = f"{GREEN_ON}  6: [1, 2, 3],{COLOR_OFF}"
+        assert three_diff in output
+    else:
+        three_diff = f"{GREEN_ON}, 6: [1, 2, 3]{COLOR_OFF}"
+        assert three_diff in output
 
 
 def test_long_dict(testdir):
@@ -87,12 +89,12 @@ def test_long_dict(testdir):
         """
     )
     output = testdir.runpytest('-vv', '--color=yes').stdout.str()
-    expected_lines = icdiff.ConsoleDiff(cols=pytest_icdiff.COLS).make_table(
-        pformat(one).splitlines(),
-        pformat(two).splitlines(),
-    )
-    for l in expected_lines:
-        assert l.strip() in output
+    expected_l = f"'default_UK_warehouse': '{YELLOW_ON}x{COLOR_OFF}force'"
+    expected_r = f"'default_UK_warehouse': '{YELLOW_ON}i{COLOR_OFF}force'"
+    expected_missing = f"{GREEN_ON}  'freight_forwarder': 'flexport',{COLOR_OFF}"
+    assert expected_l in output
+    assert expected_r in output
+    assert expected_missing in output
 
 
 def test_only_works_for_equals(testdir):
@@ -136,35 +138,4 @@ def test_prepends_icdiff_output_lines_with_color_off(testdir):
     assert len(expected) == 1
     print('\n'.join(repr(l) for l in output.splitlines()))
     _assert_line_in_ignoring_whitespace(expected[0], output)
-
-
-def test_short_strings_arent_far_apart(testdir):
-    testdir.makepyfile(
-        f"""
-        def test_thing():
-            assert 'foo' == 'fob'
-        """
-    )
-    output = testdir.runpytest('--color=no').stdout.str()
-    compare_line = next(l for l in output.splitlines() if COLOR_OFF in l)
-    compare_line = ANSI_ESCAPE_RE.sub('', compare_line)
-    assert compare_line == "E         'foo'       'fob'"
-
-
-
-def test_wide_strings_dont_wrap_crazily(testdir):
-    testdir.makepyfile(
-        f"""
-        def test_thing():
-            foo = 'foo' * 20 + 'a'
-            bar = 'foo' * 20 + 'b'
-            assert foo == bar
-        """
-    )
-    output = testdir.runpytest().stdout.str()
-    print(repr(output))
-    assert 'foof ' not in output
-    assert re.search(r"'\s+'", output)
-    E_lines = [l for l in output.splitlines() if l.strip().startswith('E')]
-    assert len(E_lines) == 2
 
