@@ -3,17 +3,23 @@ language: python
 matrix:
   include:
   - python: 3.6
-    env: TOX_ENV=py36
+    env:
+      - COLUMNS=80
+      - TOX_ENV=py36
   - python: 3.6
-    env: TOX_ENV=flake8
+    env:
+      - COLUMNS=80
+      - TOX_ENV=py36
   - python: 3.7
-    env: TOX_ENV=py37
+    env:
+      - COLUMNS=80
+      - TOX_ENV=py36
     sudo: required
     dist: xenial
 install:
 - pip install tox
 script:
-- stty cols 80 && tox -e $TOX_ENV
+- tox -e $TOX_ENV
 before_cache:
 - rm -rf $HOME/.cache/pip/log
 cache:
