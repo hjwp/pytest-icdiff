@@ -1,12 +1,14 @@
 import icdiff
 import re
 from pprintpp import pformat
+import pytest
 import pytest_icdiff
 
 YELLOW_ON = '\x1b[1;33m'
 COLOR_OFF = '\x1b[m'
 GREEN_ON = '\x1b[1;32m'
 ANSI_ESCAPE_RE = re.compile(r'(\x9B|\x1B\[)[0-?]*[ -/]*[@-~]')
+
 
 def test_short_dict(testdir):
     one = {
@@ -30,12 +32,8 @@ def test_short_dict(testdir):
     two_right = f"'the number t{YELLOW_ON}hree{COLOR_OFF}'"
     assert two_left in output
     assert two_right in output
-    if pytest_icdiff.COLS < 90:
-        three_diff = f"{GREEN_ON}  6: [1, 2, 3],{COLOR_OFF}"
-        assert three_diff in output
-    else:
-        three_diff = f"{GREEN_ON}, 6: [1, 2, 3]{COLOR_OFF}"
-        assert three_diff in output
+    three_diff = f"{GREEN_ON}  6: [1, 2, 3],{COLOR_OFF}"
+    assert three_diff in output
 
 
 def test_long_dict(testdir):
@@ -132,10 +130,23 @@ def test_prepends_icdiff_output_lines_with_color_off(testdir):
     )
     output = testdir.runpytest('--color=yes').stdout.str()
     expected = list(icdiff.ConsoleDiff().make_table(
-        pformat(one).splitlines(),
-        pformat(two).splitlines(),
+        pformat(one, width=1).splitlines(),
+        pformat(two, width=1).splitlines(),
     ))
-    assert len(expected) == 1
     print('\n'.join(repr(l) for l in output.splitlines()))
     _assert_line_in_ignoring_whitespace(expected[0], output)
 
+
+
+def test_avoids_single_line_diffs(testdir):
+    one = {1: "1", 2: "2"}
+    two = {1: "1", 2: "02", 3: "33"}
+    testdir.makepyfile(
+        f"""
+        def test_one():
+            assert {one!r} == {two!r}
+        """
+    )
+    output = testdir.runpytest().stdout.str()
+    print(repr(output))
+    assert re.search(r"1: '1',\s+$", output, flags=re.MULTILINE)
