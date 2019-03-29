@@ -9,6 +9,13 @@ def pytest_assertrepr_compare(config, op, left, right):
     if op != '==':
         return
 
+    try:
+        if abs(left + right) < 100:
+            return
+    except TypeError:
+        pass
+
+
     wide_left = pformat(left, indent=2, width=COLS / 2).splitlines()
     wide_right = pformat(right, indent=2, width=COLS / 2).splitlines()
     if len(wide_left) < 3 or len(wide_right) < 3:

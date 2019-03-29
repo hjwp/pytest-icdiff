@@ -148,3 +148,15 @@ def test_avoids_single_line_diffs(testdir):
     output = testdir.runpytest().stdout.str()
     print(repr(output))
     assert re.search(r"1: '1',\s+$", output, flags=re.MULTILINE)
+
+
+def test_does_not_break_drilldown_for_int_comparison(testdir):
+    testdir.makepyfile(
+        """
+        def test_a():
+            assert len([1, 2, 3]) == len([1, 2])
+        """
+    )
+    output = testdir.runpytest().stdout.str()
+    drilldown_expression = 'where 3 = len([1, 2, 3])'
+    assert drilldown_expression in output
