@@ -13,8 +13,7 @@ matrix:
 install:
 - pip install tox
 script:
-- stty cols 80
-- tox -e $TOX_ENV
+- stty cols 80 && tox -e $TOX_ENV
 before_cache:
 - rm -rf $HOME/.cache/pip/log
 cache:
