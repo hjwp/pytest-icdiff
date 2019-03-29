@@ -1,8 +1,6 @@
 import icdiff
 import re
 from pprintpp import pformat
-import pytest
-import pytest_icdiff
 
 YELLOW_ON = '\x1b[1;33m'
 COLOR_OFF = '\x1b[m'
