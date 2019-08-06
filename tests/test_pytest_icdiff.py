@@ -26,6 +26,34 @@ def test_short_dict(testdir):
     )
     output = testdir.runpytest().stdout.str()
     print(repr(output))
+    two_left = "'the number two'"
+    two_right = "'the number three'"
+    assert two_left in output
+    assert two_right in output
+    three_diff = "  6: [1, 2, 3],"
+    assert three_diff in output
+
+
+def test_short_dict_with_colorization(testdir):
+    one = {
+        1: "the number one",
+        2: "the number two",
+    }
+    two = {
+        1: "the number one",
+        2: "the number three",
+        6: [1, 2, 3]
+    }
+    testdir.makepyfile(
+        f"""
+        def test_one():
+            assert {one!r} == {two!r}
+        """
+    )
+    # Force colorization in py TerminalWriter
+    testdir._env_run_update['PY_COLORS'] = '1'
+    output = testdir.runpytest().stdout.str()
+    print(repr(output))
     two_left = f"'the number t{YELLOW_ON}wo{COLOR_OFF}'"
     two_right = f"'the number t{YELLOW_ON}hree{COLOR_OFF}'"
     assert two_left in output
