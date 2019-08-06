@@ -1,11 +1,11 @@
-===============
+=============
 pytest-icdiff
-===============
+=============
 
 .. image:: https://img.shields.io/pypi/v/pytest-icdiff.svg
     :target: https://pypi.org/project/pytest-icdiff
     :alt: PyPI version
-    
+
 .. image:: https://img.shields.io/conda/vn/conda-forge/pytest-icdiff.svg
     :target: https://anaconda.org/conda-forge/pytest-icdiff
     :alt: conda-forge version
