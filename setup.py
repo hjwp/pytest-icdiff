@@ -18,7 +18,7 @@ setup(
     author_email='obeythetestinggoat@gmail.com',
     maintainer='Harry Percival',
     maintainer_email='obeythetestinggoat@gmail.com',
-    license='GNU GPL v3.0',
+    license='Unlicense',
     url='https://github.com/hjwp/pytest-icdiff',
     description='use icdiff for better error messages in pytest assertions',
     long_description=read('README.rst'),
