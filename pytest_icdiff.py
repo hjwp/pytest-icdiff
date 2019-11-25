@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from pprintpp import pformat
 import icdiff
 
@@ -11,6 +13,11 @@ def pytest_assertrepr_compare(config, op, left, right):
             return
     except TypeError:
         pass
+
+    if isinstance(left, OrderedDict):
+        left = _convert_to_dict(left)
+    if isinstance(right, OrderedDict):
+        right = _convert_to_dict(right)
 
     terminal_writer = config.get_terminal_writer()
     cols = terminal_writer.fullwidth - 12
@@ -27,7 +34,6 @@ def pytest_assertrepr_compare(config, op, left, right):
     pretty_left = pformat(left, indent=2, width=cols / 2).splitlines()
     pretty_right = pformat(right, indent=2, width=cols / 2).splitlines()
 
-
     differ = icdiff.ConsoleDiff(cols=cols + 12, tabsize=2)
 
     if not terminal_writer.hasmarkup:
@@ -43,3 +49,20 @@ def pytest_assertrepr_compare(config, op, left, right):
     icdiff_lines = list(differ.make_table(pretty_left, pretty_right))
 
     return ['equals failed'] + [color_off + l for l in icdiff_lines]
+
+
+def _convert_to_dict(layer):
+    """Converts nested ordered dicts to normal dicts"""
+    result = layer
+    if isinstance(layer, OrderedDict):
+        result = dict(layer)
+    if isinstance(layer, list):
+        return [_convert_to_dict(item) for item in layer]
+
+    try:
+        for key, value in result.items():
+            result[key] = _convert_to_dict(value)
+    except AttributeError:
+        pass
+
+    return result
