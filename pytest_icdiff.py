@@ -14,9 +14,9 @@ def pytest_assertrepr_compare(config, op, left, right):
     except TypeError:
         pass
 
-    if isinstance(left, OrderedDict):
+    if isinstance(left, OrderedDict) and type(right) is dict:
         left = _convert_to_dict(left)
-    if isinstance(right, OrderedDict):
+    if isinstance(right, OrderedDict) and type(left) is dict:
         right = _convert_to_dict(right)
 
     terminal_writer = config.get_terminal_writer()
