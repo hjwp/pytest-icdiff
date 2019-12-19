@@ -21,7 +21,7 @@ setup(
     license='Unlicense',
     url='https://github.com/hjwp/pytest-icdiff',
     description='use icdiff for better error messages in pytest assertions',
-    long_description=read('README.rst'),
+    long_description=read('README.rst') + read('HISTORY.rst'),
     py_modules=['pytest_icdiff'],
     python_requires='>=3.6',
     install_requires=['pytest', 'icdiff', 'pprintpp'],
