@@ -1,10 +1,17 @@
 History
 -------
 
-Pending Release
-~~~~~~~~~~~~~~~
+0.3 (2020-01-28)
+~~~~~~~~~~~~~~~~
 
-.. Insert new release notes below this line
+* Disable colorization in sync with Pytest
+  (`PR #12 <https://github.com/hjwp/pytest-icdiff/pull/12>`__).
+* Synchronize license in `setup.py` with LICENSE file
+  (`PR #11 <https://github.com/hjwp/pytest-icdiff/pull/11>`__).
+* Show expression drill down small numbers
+  (`Issue #5 <https://github.com/hjwp/pytest-icdiff/issues/5>`__).
+* Test with Python 3.8
+  (`PR #15 <https://github.com/hjwp/pytest-icdiff/issues/15>`__).
 
 0.2 (2019-03-28)
 ~~~~~~~~~~~~~~~~
