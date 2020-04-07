@@ -1,3 +1,4 @@
+# pylint: disable=inconsistent-return-statements
 from pprintpp import pformat
 import icdiff
 
@@ -22,7 +23,8 @@ def pytest_assertrepr_compare(config, op, left, right):
         shortest_right = pformat(right, indent=2, width=1).splitlines()
         cols = max(len(l) for l in shortest_left + shortest_right) * 2
     else:
-        cols = max(len(l) for l in wide_left + wide_right) * 2
+        longest_line_length = max(len(l) for l in wide_left + wide_right)
+        cols = int(min(longest_line_length, cols / 2))
 
     pretty_left = pformat(left, indent=2, width=cols / 2).splitlines()
     pretty_right = pformat(right, indent=2, width=cols / 2).splitlines()
