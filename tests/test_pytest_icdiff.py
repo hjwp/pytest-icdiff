@@ -190,7 +190,7 @@ def test_does_not_break_drilldown_for_int_comparison(testdir):
     assert drilldown_expression in output
 
 
-def test_long_lines_in_comparators_are_wrapped_sensibly(testdir):
+def test_long_lines_in_comparators_are_wrapped_sensibly_multiline(testdir):
     left = {1: "hello " * 20}
     right = {1: "hella " * 20}
     testdir.makepyfile(
@@ -201,4 +201,21 @@ def test_long_lines_in_comparators_are_wrapped_sensibly(testdir):
     )
     output = testdir.runpytest('-vv', '--color=yes').stdout.str()
     comparison_line = next(l for l in output.splitlines() if '1:' in l and "assert" not in l)
-    assert len(comparison_line) < 120
+    assert comparison_line.count('hell') < 13
+
+def test_long_lines_in_comparators_are_wrapped_sensibly_singleline(testdir):
+    left = "hello " * 10
+    right = "hella " * 10
+    testdir.makepyfile(
+        f"""
+        def test_one():
+            assert {left!r} == {right!r}
+        """
+    )
+    output = testdir.runpytest('-vv', '--color=yes').stdout.str()
+    comparison_line = next(
+        l for l in output.splitlines()
+        if "hell" in l
+        and "assert" not in l
+    )
+    assert comparison_line.count('hell') < 13

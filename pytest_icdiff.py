@@ -21,10 +21,10 @@ def pytest_assertrepr_compare(config, op, left, right):
     if len(wide_left) < 3 or len(wide_right) < 3:
         shortest_left = pformat(left, indent=2, width=1).splitlines()
         shortest_right = pformat(right, indent=2, width=1).splitlines()
-        cols = max(len(l) for l in shortest_left + shortest_right) * 2
+        longest_line_length = max(len(l) for l in shortest_left + shortest_right)
     else:
         longest_line_length = max(len(l) for l in wide_left + wide_right)
-        cols = int(min(longest_line_length, cols / 2))
+    cols = int(min(longest_line_length, cols))
 
     pretty_left = pformat(left, indent=2, width=cols / 2).splitlines()
     pretty_right = pformat(right, indent=2, width=cols / 2).splitlines()
