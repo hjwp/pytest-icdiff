@@ -52,7 +52,7 @@ def test_short_dict_with_colorization(testdir):
     )
     # Force colorization in py TerminalWriter
     testdir.monkeypatch.setenv('PY_COLORS', '1')
-    output = testdir.runpytest().stdout.str()
+    output = testdir.runpytest('-vv').stdout.str()
     print(repr(output))
     two_left = f"'the number t{YELLOW_ON}wo{COLOR_OFF}'"
     two_right = f"'the number t{YELLOW_ON}hree{COLOR_OFF}'"
@@ -215,8 +215,7 @@ def test_long_lines_in_comparators_are_wrapped_sensibly_singleline(testdir):
     output = testdir.runpytest('-vv', '--color=yes').stdout.str()
     comparison_line = next(
         l for l in output.splitlines()
-        if "hell" in l
-        and "assert" not in l
+        if "hell" in l and "assert" not in l
     )
     assert comparison_line.count('hell') < 15
 
