@@ -191,8 +191,8 @@ def test_does_not_break_drilldown_for_int_comparison(testdir):
 
 
 def test_long_lines_in_comparators_are_wrapped_sensibly_multiline(testdir):
-    left = {1: "hello " * 20}
-    right = {1: "hella " * 20}
+    left = {1: "hello " * 20, 2: 'two'}
+    right = {1: "hella " * 20, 2: 'two'}
     testdir.makepyfile(
         f"""
         def test_one():

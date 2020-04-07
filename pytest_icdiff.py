@@ -9,7 +9,6 @@ GUTTER = 2
 MARGINS = MARGIN_L + GUTTER + 1
 
 
-
 def pytest_assertrepr_compare(config, op, left, right):
     if op != '==':
         return
@@ -48,4 +47,4 @@ def pytest_assertrepr_compare(config, op, left, right):
 
     icdiff_lines = list(differ.make_table(pretty_left, pretty_right))
 
-    return [f'equals failed'] + [color_off + l for l in icdiff_lines]
+    return ['equals failed'] + [color_off + l for l in icdiff_lines]
