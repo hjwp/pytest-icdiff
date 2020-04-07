@@ -51,7 +51,7 @@ def test_short_dict_with_colorization(testdir):
         """
     )
     # Force colorization in py TerminalWriter
-    testdir._env_run_update['PY_COLORS'] = '1'
+    testdir.monkeypatch.setenv('PY_COLORS', '1')
     output = testdir.runpytest().stdout.str()
     print(repr(output))
     two_left = f"'the number t{YELLOW_ON}wo{COLOR_OFF}'"
