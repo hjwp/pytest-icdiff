@@ -24,7 +24,7 @@ def test_short_dict(testdir):
             assert {one!r} == {two!r}
         """
     )
-    output = testdir.runpytest().stdout.str()
+    output = testdir.runpytest('-vv').stdout.str()
     print(repr(output))
     two_left = "'the number two'"
     two_right = "'the number three'"
@@ -52,7 +52,7 @@ def test_short_dict_with_colorization(testdir):
     )
     # Force colorization in py TerminalWriter
     testdir.monkeypatch.setenv('PY_COLORS', '1')
-    output = testdir.runpytest().stdout.str()
+    output = testdir.runpytest('-vv').stdout.str()
     print(repr(output))
     two_left = f"'the number t{YELLOW_ON}wo{COLOR_OFF}'"
     two_right = f"'the number t{YELLOW_ON}hree{COLOR_OFF}'"
@@ -173,7 +173,7 @@ def test_avoids_single_line_diffs(testdir):
             assert {one!r} == {two!r}
         """
     )
-    output = testdir.runpytest().stdout.str()
+    output = testdir.runpytest('-vv').stdout.str()
     print(repr(output))
     assert re.search(r"1: '1',\s+$", output, flags=re.MULTILINE)
 
@@ -188,3 +188,64 @@ def test_does_not_break_drilldown_for_int_comparison(testdir):
     output = testdir.runpytest().stdout.str()
     drilldown_expression = 'where 3 = len([1, 2, 3])'
     assert drilldown_expression in output
+
+
+def test_long_lines_in_comparators_are_wrapped_sensibly_multiline(testdir):
+    left = {1: "hello " * 20, 2: 'two'}
+    right = {1: "hella " * 20, 2: 'two'}
+    testdir.makepyfile(
+        f"""
+        def test_one():
+            assert {left!r} == {right!r}
+        """
+    )
+    output = testdir.runpytest('-vv', '--color=yes').stdout.str()
+    comparison_line = next(l for l in output.splitlines() if '1:' in l and "assert" not in l)
+    assert comparison_line.count('hell') < 13
+
+def test_long_lines_in_comparators_are_wrapped_sensibly_singleline(testdir):
+    left = "hello " * 10
+    right = "hella " * 10
+    testdir.makepyfile(
+        f"""
+        def test_one():
+            assert {left!r} == {right!r}
+        """
+    )
+    output = testdir.runpytest('-vv', '--color=yes').stdout.str()
+    comparison_line = next(
+        l for l in output.splitlines()
+        if "hell" in l and "assert" not in l
+    )
+    assert comparison_line.count('hell') < 15
+
+
+def test_columns_are_calculated_outside_hook(testdir):
+    """
+    ok for some reason if you get the TerminalWriter width
+    inside of the hook it just always returns 80.
+    but (bear with me here) if you monkeypatch.setenv(COLUMNS)
+    then it _does_ affect the width inside the hook
+    (which is where we don't want to measure it)
+    but it does _not_ affect the one outside the hook
+    (which is the one we want to use).
+    """
+    left = "hello " * 10
+    right = "hella " * 10
+    testdir.makepyfile(
+        f"""
+        def test_one():
+            assert {left!r} == {right!r}
+        """
+    )
+    testdir.monkeypatch.setenv('COLUMNS', '50')
+    # testdir._method = 'subprocess'
+    output = testdir.runpytest(
+        '-vv', '--color=yes',
+    ).stdout.str()
+    comparison_line = next(
+        l for l in output.splitlines()
+        if 'hell' in l and "assert" not in l
+    )
+    assert comparison_line.count('hell') > 5
+
