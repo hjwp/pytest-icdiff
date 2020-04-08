@@ -249,3 +249,27 @@ def test_columns_are_calculated_outside_hook(testdir):
     )
     assert comparison_line.count('hell') > 5
 
+
+def test_small_numbers_are_specialcased(testdir):
+    testdir.makepyfile(
+        f"""
+        def test_one():
+            assert 404 == 400
+        """
+    )
+    output = testdir.runpytest('-vv', '--color=yes').stdout.str()
+    assert "assert 404 == 400" in output
+    assert "+404" in output
+    assert "-400" in output
+
+
+def test_larger_numbers_are_sane(testdir):
+    testdir.makepyfile(
+        f"""
+        def test_one():
+            assert 123456 == 1234567
+        """
+    )
+    output = testdir.runpytest('-vv', '--color=yes').stdout.str()
+    assert f"123456   123456{GREEN_ON}7" in output
+

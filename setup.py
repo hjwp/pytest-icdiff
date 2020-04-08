@@ -13,7 +13,7 @@ def read(fname):
 
 setup(
     name='pytest-icdiff',
-    version='0.4',
+    version='0.5',
     author='Harry Percival',
     author_email='obeythetestinggoat@gmail.com',
     maintainer='Harry Percival',

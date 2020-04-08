@@ -4,9 +4,14 @@ from pprintpp import pformat
 import icdiff
 
 COLS = py.io.TerminalWriter().fullwidth  # pylint: disable=no-member
-MARGIN_L = 9
+MARGIN_L = 10
 GUTTER = 2
 MARGINS = MARGIN_L + GUTTER + 1
+
+# def _debug(*things):
+#     with open('/tmp/icdiff-debug.txt', 'a') as f:
+#         f.write(' '.join(str(thing) for thing in things))
+#         f.write('\n')
 
 
 def pytest_assertrepr_compare(config, op, left, right):
@@ -14,7 +19,7 @@ def pytest_assertrepr_compare(config, op, left, right):
         return
 
     try:
-        if abs(left + right) < 100:
+        if abs(left + right) < 19999:
             return
     except TypeError:
         pass
@@ -27,11 +32,13 @@ def pytest_assertrepr_compare(config, op, left, right):
 
     if len(pretty_left) < 3 or len(pretty_right) < 3:
         # avoid small diffs far apart by smooshing them up to the left
-        pretty_left = pformat(left, indent=2, width=1).splitlines()
-        pretty_right = pformat(right, indent=2, width=1).splitlines()
-        diff_cols = max(len(l) + 1 for l in pretty_left + pretty_right) * 2
-        if (diff_cols + MARGINS) > COLS:
-            diff_cols = COLS - MARGINS
+        smallest_left = pformat(left, indent=2, width=1).splitlines()
+        smallest_right = pformat(right, indent=2, width=1).splitlines()
+        max_side = max(len(l) + 1 for l in smallest_left + smallest_right)
+        if (max_side * 2 + MARGINS) < COLS:
+            diff_cols = max_side * 2 + GUTTER
+            pretty_left = pformat(left, indent=2, width=max_side).splitlines()
+            pretty_right = pformat(right, indent=2, width=max_side).splitlines()
 
     differ = icdiff.ConsoleDiff(cols=diff_cols, tabsize=2)
 
