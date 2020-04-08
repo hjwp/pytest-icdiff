@@ -163,6 +163,9 @@ def test_prepends_icdiff_output_lines_with_color_off(testdir):
     _assert_line_in_ignoring_whitespace(expected[0], output)
 
 
+def strip_color_codes(s):
+    return re.sub(r'\x1b\[[0-9;]*m', '', s)
+
 
 def test_avoids_single_line_diffs(testdir):
     one = {1: "1", 2: "2"}
@@ -175,7 +178,7 @@ def test_avoids_single_line_diffs(testdir):
     )
     output = testdir.runpytest('-vv').stdout.str()
     print(repr(output))
-    assert re.search(r"1: '1',\s+$", output, flags=re.MULTILINE)
+    assert "1: '1',     1: '1'," in strip_color_codes(output)
 
 
 def test_does_not_break_drilldown_for_int_comparison(testdir):
@@ -202,6 +205,7 @@ def test_long_lines_in_comparators_are_wrapped_sensibly_multiline(testdir):
     output = testdir.runpytest('-vv', '--color=yes').stdout.str()
     comparison_line = next(l for l in output.splitlines() if '1:' in l and "assert" not in l)
     assert comparison_line.count('hell') < 13
+
 
 def test_long_lines_in_comparators_are_wrapped_sensibly_singleline(testdir):
     left = "hello " * 10
@@ -272,4 +276,3 @@ def test_larger_numbers_are_sane(testdir):
     )
     output = testdir.runpytest('-vv', '--color=yes').stdout.str()
     assert f"123456   123456{GREEN_ON}7" in output
-
