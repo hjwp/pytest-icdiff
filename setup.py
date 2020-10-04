@@ -25,7 +25,7 @@ setup(
     long_description_content_type='text/x-rst',
     py_modules=['pytest_icdiff'],
     python_requires='>=3.6',
-    install_requires=['pytest', 'icdiff', 'pprintpp'],
+    install_requires=['pytest', 'icdiff', 'prettyprinter'],
     classifiers=[
         'Development Status :: 4 - Beta',
         'Framework :: Pytest',

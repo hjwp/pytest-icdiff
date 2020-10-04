@@ -1,8 +1,10 @@
 # pylint: disable=inconsistent-return-statements
 import os
 import difflib
-from pprintpp import pformat
+from prettyprinter import pformat
 import icdiff
+import prettyprinter
+prettyprinter.install_extras(include=["python", "requests", "dataclasses"])
 
 COLS = os.get_terminal_size().columns
 MARGIN_L = 10
