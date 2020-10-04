@@ -1,9 +1,9 @@
 # pylint: disable=inconsistent-return-statements
-import py
+import os
 from pprintpp import pformat
 import icdiff
 
-COLS = py.io.TerminalWriter().fullwidth  # pylint: disable=no-member
+COLS = os.get_terminal_size().columns
 MARGIN_L = 10
 GUTTER = 2
 MARGINS = MARGIN_L + GUTTER + 1
