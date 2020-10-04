@@ -1,5 +1,6 @@
 # pylint: disable=inconsistent-return-statements
 import os
+import difflib
 from pprintpp import pformat
 import icdiff
 
@@ -14,16 +15,17 @@ MARGINS = MARGIN_L + GUTTER + 1
 #         f.write('\n')
 
 
-def pytest_assertrepr_compare(config, op, left, right):
-    if op != '==':
-        return
+def get_best_substring(needle, haystack):
+    match_length = int(len(needle) * 1.1)
+    possible_substrings = [
+        haystack[i: match_length + i]
+        for i in range(len(haystack) - match_length)
+    ]
+    if match := difflib.get_close_matches(needle, possible_substrings, n=1):
+        return match[0]
 
-    try:
-        if abs(left + right) < 19999:
-            return
-    except TypeError:
-        pass
 
+def get_pretty_diff_lines(left, right, color_enabled):
     half_cols = COLS / 2 - MARGINS
 
     pretty_left = pformat(left, indent=2, width=half_cols).splitlines()
@@ -42,16 +44,38 @@ def pytest_assertrepr_compare(config, op, left, right):
 
     differ = icdiff.ConsoleDiff(cols=diff_cols, tabsize=2)
 
-    if not config.get_terminal_writer().hasmarkup:
+    if not color_enabled:
         # colorization is disabled in Pytest - either due to the terminal not
         # supporting it or the user disabling it. We should obey, but there is
         # no option in icdiff to disable it, so we replace its colorization
         # function with a no-op
         differ.colorize = lambda string: string
-        color_off = ''
-    else:
-        color_off = icdiff.color_codes['none']
 
-    icdiff_lines = list(differ.make_table(pretty_left, pretty_right))
+    return list(differ.make_table(pretty_left, pretty_right))
 
-    return ['equals failed'] + [color_off + l for l in icdiff_lines]
+
+def pytest_assertrepr_compare(config, op, left, right):
+    if op not in ('==', 'in'):
+        return
+
+    try:
+        # early return for small number comparisons
+        if abs(left + right) < 19999:
+            return
+    except TypeError:
+        pass
+
+    color_enabled = config.get_terminal_writer().hasmarkup
+
+    coloroff_code = icdiff.color_codes['none'] if color_enabled else ''
+
+    if op == '==':
+        diff_lines = get_pretty_diff_lines(left, right, color_enabled)
+        return ['equals failed'] + [coloroff_code + l for l in diff_lines]
+
+    if op == 'in' and str(left) == left and str(right) == right:  # string in comparison
+        best_match = get_best_substring(left, right)
+        if not best_match:
+            return
+        diff_lines = get_pretty_diff_lines(left, best_match, color_enabled=True)
+        return ['in failed. Closest match was:'] + [coloroff_code + l for l in diff_lines]

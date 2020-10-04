@@ -121,12 +121,9 @@ def test_long_dict(testdir):
     assert expected_missing in output
 
 
-def test_only_works_for_equals(testdir):
+def test_only_works_for_equals_for_now(testdir):
     testdir.makepyfile(
         f"""
-        def test_in():
-            assert 1 in [2, 3, 4]
-
         def test_gt():
             assert 1 > 2
         """
