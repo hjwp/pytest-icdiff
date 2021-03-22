@@ -1,9 +1,9 @@
 # pylint: disable=inconsistent-return-statements
-import os
+import shutil
 from pprintpp import pformat
 import icdiff
 
-COLS = os.get_terminal_size().columns
+COLS = shutil.get_terminal_size().columns
 MARGIN_L = 10
 GUTTER = 2
 MARGINS = MARGIN_L + GUTTER + 1
