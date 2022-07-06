@@ -263,8 +263,7 @@ def test_small_numbers_are_specialcased(testdir):
     )
     output = testdir.runpytest('-vv', '--color=yes').stdout.str()
     assert "assert 404 == 400" in output
-    assert "+404" in output
-    assert "-400" in output
+    assert "E       assert 404 == 400" in output
 
 
 def test_larger_numbers_are_sane(testdir):
