@@ -52,6 +52,8 @@ def pytest_assertrepr_compare(config, op, left, right):
     else:
         color_off = icdiff.color_codes['none']
 
-    icdiff_lines = list(differ.make_table(pretty_left, pretty_right, context=True))
+    icdiff_lines = list(differ.make_table(pretty_left, pretty_right))
+    if len(icdiff_lines) > 50:
+        icdiff_lines = list(differ.make_table(pretty_left, pretty_right, context=True)) 
 
     return ['equals failed'] + [color_off + l for l in icdiff_lines]

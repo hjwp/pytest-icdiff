@@ -275,3 +275,17 @@ def test_larger_numbers_are_sane(testdir):
     )
     output = testdir.runpytest('-vv', '--color=yes').stdout.str()
     assert f"123456   123456{GREEN_ON}7" in output
+
+
+def test_really_long_diffs_use_context_mode(testdir):
+    testdir.makepyfile(
+        f"""
+        def test_one():
+            one = list(range(100))
+            two = list(range(20)) + ["X"] + list(range(20, 50)) + ["Y"] + list(range(53, 100))
+            assert one == two
+        """
+    )
+    output = testdir.runpytest('-vv', '--color=yes').stdout.str()
+    assert len(output.splitlines()) < 50
+    assert "---" in output  # context split marker
