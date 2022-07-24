@@ -15,7 +15,7 @@ MARGINS = MARGIN_L + GUTTER + 1
 
 
 def pytest_assertrepr_compare(config, op, left, right):
-    if op != '==':
+    if op != "==":
         return
 
     try:
@@ -48,12 +48,12 @@ def pytest_assertrepr_compare(config, op, left, right):
         # no option in icdiff to disable it, so we replace its colorization
         # function with a no-op
         differ.colorize = lambda string: string
-        color_off = ''
+        color_off = ""
     else:
-        color_off = icdiff.color_codes['none']
+        color_off = icdiff.color_codes["none"]
 
     icdiff_lines = list(differ.make_table(pretty_left, pretty_right))
     if len(icdiff_lines) > 50:
-        icdiff_lines = list(differ.make_table(pretty_left, pretty_right, context=True)) 
+        icdiff_lines = list(differ.make_table(pretty_left, pretty_right, context=True))
 
-    return ['equals failed'] + [color_off + l for l in icdiff_lines]
+    return ["equals failed"] + [color_off + l for l in icdiff_lines]
