@@ -24,7 +24,7 @@ setup(
     long_description=read("README.rst") + read("HISTORY.rst"),
     long_description_content_type="text/x-rst",
     py_modules=["pytest_icdiff"],
-    python_requires=">=3.6",
+    python_requires=">=3.7",
     install_requires=["pytest", "icdiff", "pprintpp"],
     classifiers=[
         "Development Status :: 4 - Beta",
@@ -32,7 +32,6 @@ setup(
         "Intended Audience :: Developers",
         "Topic :: Software Development :: Testing",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
