@@ -72,19 +72,19 @@ def pytest_assertrepr_compare(config, op, left, right):
     half_cols = COLS / 2 - MARGINS
     TABSIZE = int(config.getoption("--tabsize") or 2)
 
-    pretty_left = pformat(left, indent=2, width=half_cols).splitlines()
-    pretty_right = pformat(right, indent=2, width=half_cols).splitlines()
+    pretty_left = pformat(left, indent=TABSIZE, width=half_cols).splitlines()
+    pretty_right = pformat(right, indent=TABSIZE, width=half_cols).splitlines()
     diff_cols = COLS - MARGINS
 
     if len(pretty_left) < 3 or len(pretty_right) < 3:
         # avoid small diffs far apart by smooshing them up to the left
-        smallest_left = pformat(left, indent=2, width=1).splitlines()
-        smallest_right = pformat(right, indent=2, width=1).splitlines()
+        smallest_left = pformat(left, indent=TABSIZE, width=1).splitlines()
+        smallest_right = pformat(right, indent=TABSIZE, width=1).splitlines()
         max_side = max(len(l) + 1 for l in smallest_left + smallest_right)
         if (max_side * 2 + MARGINS) < COLS:
             diff_cols = max_side * 2 + GUTTER
-            pretty_left = pformat(left, indent=2, width=max_side).splitlines()
-            pretty_right = pformat(right, indent=2, width=max_side).splitlines()
+            pretty_left = pformat(left, indent=TABSIZE, width=max_side).splitlines()
+            pretty_right = pformat(right, indent=TABSIZE, width=max_side).splitlines()
 
     differ = icdiff.ConsoleDiff(
         cols=diff_cols,
