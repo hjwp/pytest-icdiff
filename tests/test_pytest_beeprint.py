@@ -1,6 +1,7 @@
-import icdiff
 import re
-from pprintpp import pformat
+
+import icdiff
+from beeprint import pp
 
 YELLOW_ON = '\x1b[1;33m'
 COLOR_OFF = '\x1b[m'
@@ -156,8 +157,8 @@ def test_prepends_icdiff_output_lines_with_color_off(testdir):
     )
     output = testdir.runpytest('--color=yes').stdout.str()
     expected = list(icdiff.ConsoleDiff().make_table(
-        pformat(one, width=1).splitlines(),
-        pformat(two, width=1).splitlines(),
+        pp(one, width=1).splitlines(),
+        pp(two, width=1).splitlines(),
     ))
     print('\n'.join(repr(l) for l in output.splitlines()))
     _assert_line_in_ignoring_whitespace(expected[0], output)
@@ -203,7 +204,8 @@ def test_long_lines_in_comparators_are_wrapped_sensibly_multiline(testdir):
         """
     )
     output = testdir.runpytest('-vv', '--color=yes').stdout.str()
-    comparison_line = next(l for l in output.splitlines() if '1:' in l and "assert" not in l)
+    comparison_line = next(l for l in output.splitlines()
+                           if '1:' in l and "assert" not in l)
     assert comparison_line.count('hell') < 13
 
 

@@ -1,17 +1,17 @@
-=============
-pytest-icdiff
-=============
+===============
+pytest-beeprint
+===============
 
-.. image:: https://img.shields.io/pypi/v/pytest-icdiff.svg
-    :target: https://pypi.org/project/pytest-icdiff
+.. image:: https://img.shields.io/pypi/v/pytest-beeprint.svg
+    :target: https://pypi.org/project/pytest-beeprint
     :alt: PyPI version
 
-.. image:: https://img.shields.io/conda/vn/conda-forge/pytest-icdiff.svg
-    :target: https://anaconda.org/conda-forge/pytest-icdiff
+.. image:: https://img.shields.io/conda/vn/conda-forge/pytest-beeprint.svg
+    :target: https://anaconda.org/conda-forge/pytest-beeprint
     :alt: conda-forge version
 
-.. image:: https://img.shields.io/pypi/pyversions/pytest-icdiff.svg
-    :target: https://pypi.org/project/pytest-icdiff
+.. image:: https://img.shields.io/pypi/pyversions/pytest-beeprint.svg
+    :target: https://pypi.org/project/pytest-beeprint
     :alt: Python versions
 
 Better diffs in `pytest`_ assertion error messages using  `ICDiff`_.
@@ -19,7 +19,7 @@ Better diffs in `pytest`_ assertion error messages using  `ICDiff`_.
 Usage
 -----
 
-    pip install pytest-icdiff
+    pip install pytest-beeprint
 
 Once you've installed it, ``pytest`` will produce nice colourised diffs for any ``assert ==`` :
 
@@ -28,12 +28,12 @@ Once you've installed it, ``pytest`` will produce nice colourised diffs for any 
 
 Issues and PRs welcome.
 
-Thanks to the maintainers of `ICDiff`_ and also `pprintpp`_ !
+Thanks to the maintainers of `pytest-beeprint`, `ICDiff`_ and also `beeprint`_ !
 
 License
 -------
 
-Distributed under the terms of the `Unlicense`_ license, "pytest-icdiff" is free and open source software
+Distributed under the terms of the `Unlicense`_ license, "pytest-beeprint" is free and open source software
 
 This `pytest`_ plugin was generated with `Cookiecutter`_ along with `@hackebrot`_'s `cookiecutter-pytest-plugin`_ template.
 
@@ -42,7 +42,8 @@ This `pytest`_ plugin was generated with `Cookiecutter`_ along with `@hackebrot`
 .. _`@hackebrot`: https://github.com/hackebrot
 .. _`cookiecutter-pytest-plugin`: https://github.com/pytest-dev/cookiecutter-pytest-plugin
 .. _`pytest`: https://github.com/pytest-dev/pytest
-.. _`Unlicense`: http://unlicense.org
+.. _`Unlicense`: http://unlicense.orgf
+.. _`pytest-icdiff`: https://github.com/hjwp/pytest-icdiff
 .. _`icdiff`: https://www.jefftk.com/icdiff
-.. _`pprintpp`: https://github.com/wolever/pprintpp
+.. _`beeprint`: https://github.com/panyanyany/beeprint
 
