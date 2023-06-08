@@ -157,8 +157,8 @@ def test_prepends_icdiff_output_lines_with_color_off(testdir):
     )
     output = testdir.runpytest('--color=yes').stdout.str()
     expected = list(icdiff.ConsoleDiff().make_table(
-        pp(one, width=1).splitlines(),
-        pp(two, width=1).splitlines(),
+        pp(one, width=1, output=False).splitlines(),
+        pp(two, width=1, output=False).splitlines(),
     ))
     print('\n'.join(repr(l) for l in output.splitlines()))
     _assert_line_in_ignoring_whitespace(expected[0], output)
@@ -204,8 +204,8 @@ def test_long_lines_in_comparators_are_wrapped_sensibly_multiline(testdir):
         """
     )
     output = testdir.runpytest('-vv', '--color=yes').stdout.str()
-    comparison_line = next(l for l in output.splitlines()
-                           if '1:' in l and "assert" not in l)
+    comparison_line = next(_ for _ in output.splitlines()
+                           if '1:' in _ and "assert" not in _)
     assert comparison_line.count('hell') < 13
 
 
@@ -220,8 +220,8 @@ def test_long_lines_in_comparators_are_wrapped_sensibly_singleline(testdir):
     )
     output = testdir.runpytest('-vv', '--color=yes').stdout.str()
     comparison_line = next(
-        l for l in output.splitlines()
-        if "hell" in l and "assert" not in l
+        _ for _ in output.splitlines()
+        if "hell" in _ and "assert" not in _
     )
     assert comparison_line.count('hell') < 15
 
@@ -250,15 +250,15 @@ def test_columns_are_calculated_outside_hook(testdir):
         '-vv', '--color=yes',
     ).stdout.str()
     comparison_line = next(
-        l for l in output.splitlines()
-        if 'hell' in l and "assert" not in l
+        _ for _ in output.splitlines()
+        if 'hell' in _ and "assert" not in _
     )
     assert comparison_line.count('hell') > 5
 
 
 def test_small_numbers_are_specialcased(testdir):
     testdir.makepyfile(
-        f"""
+        """
         def test_one():
             assert 404 == 400
         """
@@ -270,7 +270,7 @@ def test_small_numbers_are_specialcased(testdir):
 
 def test_larger_numbers_are_sane(testdir):
     testdir.makepyfile(
-        f"""
+        """
         def test_one():
             assert 123456 == 1234567
         """
@@ -281,10 +281,16 @@ def test_larger_numbers_are_sane(testdir):
 
 def test_really_long_diffs_use_context_mode(testdir):
     testdir.makepyfile(
-        f"""
+        """
         def test_one():
             one = list(range(100))
-            two = list(range(20)) + ["X"] + list(range(20, 50)) + ["Y"] + list(range(53, 100))
+            two = (
+                list(range(20)) +
+                ["X"] +
+                list(range(20, 50)) +
+                ["Y"] +
+                list(range(53, 100))
+            )
             assert one == two
         """
     )

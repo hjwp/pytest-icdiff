@@ -27,19 +27,24 @@ def pytest_assertrepr_compare(config, op, left, right):
 
     half_cols = COLS / 2 - MARGINS
 
-    pretty_left = pp(left, indent=2, width=half_cols).splitlines()
-    pretty_right = pp(right, indent=2, width=half_cols).splitlines()
+    pretty_left = pp(left, indent=2, width=half_cols,
+                     output=False).splitlines()
+    pretty_right = pp(right, indent=2, width=half_cols,
+                      output=False).splitlines()
     diff_cols = COLS - MARGINS
 
     if len(pretty_left) < 3 or len(pretty_right) < 3:
         # avoid small diffs far apart by smooshing them up to the left
-        smallest_left = pp(left, indent=2, width=1).splitlines()
-        smallest_right = pp(right, indent=2, width=1).splitlines()
-        max_side = max(len(l) + 1 for l in smallest_left + smallest_right)
+        smallest_left = pp(left, indent=2, width=1, output=False).splitlines()
+        smallest_right = pp(right, indent=2, width=1,
+                            output=False).splitlines()
+        max_side = max(len(_) + 1 for _ in smallest_left + smallest_right)
         if (max_side * 2 + MARGINS) < COLS:
             diff_cols = max_side * 2 + GUTTER
-            pretty_left = pp(left, indent=2, width=max_side).splitlines()
-            pretty_right = pp(right, indent=2, width=max_side).splitlines()
+            pretty_left = pp(left, indent=2, width=max_side,
+                             output=False).splitlines()
+            pretty_right = pp(right, indent=2, width=max_side,
+                              output=False).splitlines()
 
     differ = icdiff.ConsoleDiff(cols=diff_cols, tabsize=2)
 
@@ -58,4 +63,4 @@ def pytest_assertrepr_compare(config, op, left, right):
         icdiff_lines = list(differ.make_table(
             pretty_left, pretty_right, context=True))
 
-    return ["equals failed"] + [color_off + l for l in icdiff_lines]
+    return ["equals failed"] + [color_off + _ for _ in icdiff_lines]
