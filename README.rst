@@ -28,7 +28,7 @@ Once you've installed it, ``pytest`` will produce nice colourised diffs for any 
 
 Issues and PRs welcome.
 
-Thanks to the maintainers of `pytest-beeprint`, `ICDiff`_ and also `beeprint`_ !
+Thanks to the maintainers of `pytest-icdiff`, `ICDiff`_ and also `beeprint`_ !
 
 License
 -------
