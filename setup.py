@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os
 import codecs
+import os
+
 from setuptools import setup
 
 
@@ -12,20 +13,20 @@ def read(fname):
 
 
 setup(
-    name="pytest-icdiff",
+    name="pytest-beeprint",
     version="0.6",
-    author="Harry Percival",
-    author_email="obeythetestinggoat@gmail.com",
-    maintainer="Harry Percival",
-    maintainer_email="obeythetestinggoat@gmail.com",
+    author="Rodrigo Ferreira de Souza",
+    author_email="rodfersou@gmail.com",
+    maintainer="Rodrigo Ferreira de Souza",
+    maintainer_email="rodfersou@gmail.com",
     license="Unlicense",
-    url="https://github.com/hjwp/pytest-icdiff",
+    url="https://github.com/hjwp/pytest-beeprint",
     description="use icdiff for better error messages in pytest assertions",
     long_description=read("README.rst") + read("HISTORY.rst"),
     long_description_content_type="text/x-rst",
-    py_modules=["pytest_icdiff"],
+    py_modules=["pytest_beeprint"],
     python_requires=">=3.7",
-    install_requires=["pytest", "icdiff", "pprintpp"],
+    install_requires=["pytest", "icdiff", "beeprint"],
     classifiers=[
         "Development Status :: 4 - Beta",
         "Framework :: Pytest",
@@ -42,7 +43,7 @@ setup(
     ],
     entry_points={
         "pytest11": [
-            "icdiff = pytest_icdiff",
+            "icdiff = pytest_beeprint",
         ],
     },
 )
