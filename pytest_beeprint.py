@@ -31,12 +31,7 @@ def pytest_assertrepr_compare(config, op, left, right):
     pretty_right = pp(right, indent=2, width=half_cols, output=False).splitlines()
     diff_cols = COLS - MARGINS
 
-    if (
-        isinstance(left, list)
-        or len(pretty_left) < 3
-        or isinstance(right, list)
-        or len(pretty_right) < 3
-    ):
+    if len(pretty_left) < 5 or len(pretty_right) < 5:
         # avoid small diffs far apart by smooshing them up to the left
         smallest_left = pp(left, indent=2, width=1, output=False).splitlines()
         smallest_right = pp(right, indent=2, width=1, output=False).splitlines()
