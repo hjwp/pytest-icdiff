@@ -310,3 +310,4 @@ def test_np_arrays_can_use_equals(testdir) -> None:
     output = result.stdout.str()
     assert 'ValueError' not in output
     assert 'AssertionError' in output
+    assert 'where False = all(equals failed' not in output, 'pytest-icdiff not used'
