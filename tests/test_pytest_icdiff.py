@@ -289,3 +289,24 @@ def test_really_long_diffs_use_context_mode(testdir):
     output = testdir.runpytest('-vv', '--color=yes').stdout.str()
     assert len(output.splitlines()) < 50
     assert "---" in output  # context split marker
+
+
+def test_np_arrays_can_use_equals(testdir) -> None:
+    """
+    NP iterables will fall back to pytest default output
+    """
+    testdir.copy_example('tests/fakes.py')
+    testdir.makepyfile("""
+    from fakes import FakeNumpyArray
+
+    def test():
+        result = FakeNumpyArray([1, 2, 3])
+
+        assert all(result == 2)
+    """)
+
+    result = testdir.runpytest()
+
+    output = result.stdout.str()
+    assert 'ValueError' not in output
+    assert 'AssertionError' in output

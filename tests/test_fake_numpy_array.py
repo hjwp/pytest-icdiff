@@ -3,9 +3,29 @@ import pytest
 from fakes import FakeNumpyArray
 
 
-def test():
+@pytest.fixture
+def fake():
+    return FakeNumpyArray([1, 2, 3])
+
+
+# --- INTEGRATED ---
+
+
+def test_in_test(fake):
     """
-    FakeNumpyArray can be used to trigger a ValueError
+    FakeNumpyArray can be used to equate to False in a test assertion, this
+    means this fake can be used to trigger pytest to try to generate a diff
+    (gets us into this plugin's code).
+    """
+    result = all(fake == 2)
+
+    assert result is False
+
+
+def test_in_icdiff(fake):
+    """
+    A FakeNumpyArray instance will trigger a ValueError when pytest-icdiff
+    checks it before diffing.
     """
     left = FakeNumpyArray([1, 2, 3])
     right = 1
@@ -14,39 +34,45 @@ def test():
         abs(left + right) < 19999
 
 
-def test_init():
+# --- PARTS ---
+
+
+def test_init(fake):
     """
     FakeNumpyArray can init with a list.
     """
-    result = FakeNumpyArray([1, 2, 3])
+    result = fake
 
     assert isinstance(result, FakeNumpyArray)
 
 
-def test_add():
+def test_eq(fake):
+    """
+    FakeNumpyArray returns instance of itself when `==` is applied to it.
+    """
+    result = fake == 1
+
+    assert isinstance(result, FakeNumpyArray)
+
+
+def test_add(fake):
     """
     FakeNumpyArray returns instance of itself when `+ 1` is applied to it.
     """
-    fake = FakeNumpyArray()
-
     result = fake + 1
 
     assert isinstance(result, FakeNumpyArray)
 
 
-def test_abs():
-    fake = FakeNumpyArray()
-
+def test_abs(fake):
     result = abs(fake)
 
     assert isinstance(result, FakeNumpyArray)
 
 
-def test_bool():
+def test_bool(fake):
     """
     Attempting to use a FakeNumpyArray in a boolean expression raises.
     """
-    fake = FakeNumpyArray()
-
     with pytest.raises(ValueError):
         fake < 19999
