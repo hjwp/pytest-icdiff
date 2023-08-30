@@ -9,12 +9,6 @@ COLOR_OFF = '\x1b[m'
 GREEN_ON = '\x1b[1;32m'
 ANSI_ESCAPE_RE = re.compile(r'(\x9B|\x1B\[)[0-?]*[ -/]*[@-~]')
 
-@pytest.fixture
-def with_80_col_terminal():
-    # haven't found a better way to simulate terminal sizes
-    # at a lower level yet sadly.
-    with mock.patch("pytest_icdiff.COLS", 99):
-        yield
 
 
 def test_short_dict(testdir):
@@ -202,7 +196,6 @@ def test_does_not_break_drilldown_for_int_comparison(testdir):
     assert drilldown_expression in output
 
 
-@pytest.mark.usefixtures("with_80_col_terminal")
 def test_long_lines_in_comparators_are_wrapped_sensibly_multiline(testdir):
     left = {1: "hello " * 20, 2: 'two'}
     right = {1: "hella " * 20, 2: 'two'}
@@ -217,7 +210,6 @@ def test_long_lines_in_comparators_are_wrapped_sensibly_multiline(testdir):
     assert comparison_line.count('hell') < 13
 
 
-@pytest.mark.usefixtures("with_80_col_terminal")
 def test_long_lines_in_comparators_are_wrapped_sensibly_singleline(testdir):
     left = "hello " * 10
     right = "hella " * 10
@@ -288,7 +280,6 @@ def test_larger_numbers_are_sane(testdir):
     assert f"123456   123456{GREEN_ON}7" in output
 
 
-@pytest.mark.usefixtures("with_80_col_terminal")
 def test_really_long_diffs_use_context_mode(testdir):
     testdir.makepyfile(
         f"""
@@ -298,6 +289,6 @@ def test_really_long_diffs_use_context_mode(testdir):
             assert one == two
         """
     )
-    output = testdir.runpytest('-vv', '--color=yes').stdout.str()
+    output = testdir.runpytest('-vv', '--color=yes', '-r=no').stdout.str()
     assert len(output.splitlines()) < 50
     assert "---" in output  # context split marker
