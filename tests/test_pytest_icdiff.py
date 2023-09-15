@@ -296,14 +296,13 @@ def test_really_long_diffs_use_context_mode(testdir):
 
 def test_np_arrays_can_use_equals(testdir) -> None:
     """
-    NP iterables will fall back to pytest default output
+    Numpy iterables will fall back to pytest default output
     """
-    testdir.copy_example('tests/fakes.py')
     testdir.makepyfile("""
-    from fakes import FakeNumpyArray
+    import numpy as np
 
     def test():
-        result = FakeNumpyArray([1, 2, 3])
+        result = np.array([1, 2, 3])
 
         assert all(result == 2)
     """)
