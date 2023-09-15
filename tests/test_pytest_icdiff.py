@@ -1,4 +1,6 @@
 import icdiff
+from unittest import mock
+import pytest
 import re
 from pprintpp import pformat
 
@@ -6,6 +8,7 @@ YELLOW_ON = '\x1b[1;33m'
 COLOR_OFF = '\x1b[m'
 GREEN_ON = '\x1b[1;32m'
 ANSI_ESCAPE_RE = re.compile(r'(\x9B|\x1B\[)[0-?]*[ -/]*[@-~]')
+
 
 
 def test_short_dict(testdir):
@@ -286,7 +289,7 @@ def test_really_long_diffs_use_context_mode(testdir):
             assert one == two
         """
     )
-    output = testdir.runpytest('-vv', '--color=yes').stdout.str()
+    output = testdir.runpytest('-vv', '--color=yes', '-r=no').stdout.str()
     assert len(output.splitlines()) < 50
     assert "---" in output  # context split marker
 
