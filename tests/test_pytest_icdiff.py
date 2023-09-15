@@ -2,6 +2,7 @@ import icdiff
 from unittest import mock
 import pytest
 import re
+import sys
 from pprintpp import pformat
 
 YELLOW_ON = '\x1b[1;33m'
@@ -294,6 +295,7 @@ def test_really_long_diffs_use_context_mode(testdir):
     assert "---" in output  # context split marker
 
 
+@pytest.mark.skipif('numpy' not in sys.modules, reason="requires numpy library")
 def test_np_arrays_can_use_equals(testdir) -> None:
     """
     Numpy iterables will fall back to pytest default output
