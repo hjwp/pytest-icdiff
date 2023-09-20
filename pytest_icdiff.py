@@ -23,6 +23,10 @@ def pytest_assertrepr_compare(config, op, left, right):
             return
     except TypeError:
         pass
+    except ValueError:
+        # ValueErrors are raised when numpy / pandas errors are checked
+        # Bail out of generating a diff and use pytest default output
+        return
 
     half_cols = COLS / 2 - MARGINS
 

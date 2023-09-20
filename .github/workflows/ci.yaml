@@ -16,6 +16,7 @@ jobs:
       - name: Install dependencies
         run: |
           python setup.py develop
+          pip install numpy
 
       - name: Test
         shell: 'script -q -e -c "bash {0}"'

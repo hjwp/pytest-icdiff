@@ -2,6 +2,7 @@ import icdiff
 from unittest import mock
 import pytest
 import re
+import sys
 from pprintpp import pformat
 
 YELLOW_ON = '\x1b[1;33m'
@@ -292,3 +293,25 @@ def test_really_long_diffs_use_context_mode(testdir):
     output = testdir.runpytest('-vv', '--color=yes', '-r=no').stdout.str()
     assert len(output.splitlines()) < 50
     assert "---" in output  # context split marker
+
+
+@pytest.mark.skipif('numpy' not in sys.modules, reason="requires numpy library")
+def test_np_arrays_can_use_equals(testdir) -> None:
+    """
+    Numpy iterables will fall back to pytest default output
+    """
+    testdir.makepyfile("""
+    import numpy as np
+
+    def test():
+        result = np.array([1, 2, 3])
+
+        assert all(result == 2)
+    """)
+
+    result = testdir.runpytest()
+
+    output = result.stdout.str()
+    assert 'ValueError' not in output
+    assert 'AssertionError' in output
+    assert 'where False = all(equals failed' not in output, 'pytest-icdiff not used'
