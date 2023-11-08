@@ -1,3 +1,4 @@
+import pytest
 import icdiff
 import re
 import sys
@@ -295,23 +296,25 @@ def test_really_long_diffs_use_context_mode(testdir):
     assert "---" in output  # context split marker
 
 
-@pytest.mark.skipif('numpy' not in sys.modules, reason="requires numpy library")
+@pytest.mark.skipif("numpy" not in sys.modules, reason="requires numpy library")
 def test_np_arrays_can_use_equals(testdir) -> None:
     """
     Numpy iterables will fall back to pytest default output
     """
-    testdir.makepyfile("""
+    testdir.makepyfile(
+        """
     import numpy as np
 
     def test():
         result = np.array([1, 2, 3])
 
         assert all(result == 2)
-    """)
+    """
+    )
 
     result = testdir.runpytest()
 
     output = result.stdout.str()
-    assert 'ValueError' not in output
-    assert 'AssertionError' in output
-    assert 'where False = all(equals failed' not in output, 'pytest-icdiff not used'
+    assert "ValueError" not in output
+    assert "AssertionError" in output
+    assert "where False = all(equals failed" not in output, "pytest-icdiff not used"
