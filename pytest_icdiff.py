@@ -16,42 +16,42 @@ MARGINS = MARGIN_L + GUTTER + 1
 
 def pytest_addoption(parser):
     parser.addoption(
-        "--cols",
+        "--icdiff-cols",
         action="store",
         default=None,
         help="pytest-icdiff:  specify the width of the screen, in case autodetection fails you",
     )
     parser.addoption(
-        "--show-all-spaces",
+        "--icdiff-show-all-spaces",
         default=False,
         action="store_true",
         help="pytest-icdiff:  color all non-matching whitespace including that which is not needed for drawing the eye to changes.  Slow, ugly, displays all changes",
     )
     parser.addoption(
-        "--highlight",
+        "--icdiff-highlight",
         default=False,
         action="store_true",
         help="pytest-icdiff:  color by changing the background color instead of the foreground color.  Very fast, ugly, displays all changes",
     )
     parser.addoption(
-        "--line-numbers",
+        "--icdiff-line-numbers",
         default=False,
         action="store_true",
         help="pytest-icdiff:  generate output with line numbers. Not compatible with the 'exclude-lines' option.",
     )
     parser.addoption(
-        "--tabsize",
+        "--icdiff-tabsize",
         default=2,
         help="pytest-icdiff:  tab stop spacing",
     )
     parser.addoption(
-        "--truncate",
+        "--icdiff-truncate",
         default=False,
         action="store_true",
         help="pytest-icdiff:  truncate long lines instead of wrapping them",
     )
     parser.addoption(
-        "--strip-trailing-cr",
+        "--icdiff-strip-trailing-cr",
         default=False,
         action="store_true",
         help="pytest-icdiff:  strip any trailing carriage return at the end of an input line",
@@ -72,9 +72,9 @@ def pytest_assertrepr_compare(config, op, left, right):
         # Bail out of generating a diff and use pytest default output
         return
 
-    COLS = int(config.getoption("--cols") or AUTO_COLS)
+    COLS = int(config.getoption("--icdiff-cols") or AUTO_COLS)
     half_cols = COLS / 2 - MARGINS
-    TABSIZE = int(config.getoption("--tabsize") or 2)
+    TABSIZE = int(config.getoption("--icdiff-tabsize") or 2)
 
     pretty_left = pformat(left, indent=TABSIZE, width=half_cols).splitlines()
     pretty_right = pformat(right, indent=TABSIZE, width=half_cols).splitlines()
@@ -92,12 +92,12 @@ def pytest_assertrepr_compare(config, op, left, right):
 
     differ = icdiff.ConsoleDiff(
         cols=diff_cols,
-        show_all_spaces=config.getoption("--show-all-spaces"),
-        highlight=config.getoption("--highlight"),
-        line_numbers=config.getoption("--line-numbers"),
+        show_all_spaces=config.getoption("--icdiff-show-all-spaces"),
+        highlight=config.getoption("--icdiff-highlight"),
+        line_numbers=config.getoption("--icdiff-line-numbers"),
         tabsize=TABSIZE,
-        truncate=config.getoption("--truncate"),
-        strip_trailing_cr=config.getoption("--strip-trailing-cr"),
+        truncate=config.getoption("--icdiff-truncate"),
+        strip_trailing_cr=config.getoption("--icdiff-strip-trailing-cr"),
     )
 
     if not config.get_terminal_writer().hasmarkup:
