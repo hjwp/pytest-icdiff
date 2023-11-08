@@ -2,7 +2,7 @@ import icdiff
 from unittest import mock
 import pytest
 import re
-from pprintpp import pformat
+from beeprint import pp
 
 YELLOW_ON = '\x1b[1;33m'
 COLOR_OFF = '\x1b[m'
@@ -159,8 +159,8 @@ def test_prepends_icdiff_output_lines_with_color_off(testdir):
     )
     output = testdir.runpytest('--color=yes').stdout.str()
     expected = list(icdiff.ConsoleDiff().make_table(
-        pformat(one, width=1).splitlines(),
-        pformat(two, width=1).splitlines(),
+        pp(one, width=1, output=False).splitlines(),
+        pp(two, width=1, output=False).splitlines(),
     ))
     print('\n'.join(repr(l) for l in output.splitlines()))
     _assert_line_in_ignoring_whitespace(expected[0], output)

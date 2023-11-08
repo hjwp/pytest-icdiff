@@ -1,12 +1,17 @@
 # pylint: disable=inconsistent-return-statements
 import shutil
-from pprintpp import pformat
+
 import icdiff
+from beeprint import pp
 
 COLS = shutil.get_terminal_size().columns
 MARGIN_L = 10
 GUTTER = 2
 MARGINS = MARGIN_L + GUTTER + 1
+
+def pformat(*args, **kwargs) -> str:  # temporary wrapper to minimise diff
+    return pp(*args, **kwargs, output=False)
+
 
 # def _debug(*things):
 #     with open('/tmp/icdiff-debug.txt', 'a') as f:

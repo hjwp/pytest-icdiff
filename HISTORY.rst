@@ -1,6 +1,13 @@
 History
 -------
 
+* WARNING: history poorly maintained.
+
+0.8 (2023-10)
+~~~~~~~~~~~~
+
+* merge in pytest-beeprint fork.  thanks!
+
 0.3 (2020-01-28)
 ~~~~~~~~~~~~~~~~
 

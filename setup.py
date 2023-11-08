@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os
 import codecs
+import os
+
 from setuptools import setup
 
 
@@ -13,7 +14,7 @@ def read(fname):
 
 setup(
     name="pytest-icdiff",
-    version="0.7",
+    version="0.8",
     author="Harry Percival",
     author_email="obeythetestinggoat@gmail.com",
     maintainer="Harry Percival",
@@ -25,7 +26,7 @@ setup(
     long_description_content_type="text/x-rst",
     py_modules=["pytest_icdiff"],
     python_requires=">=3.7",
-    install_requires=["pytest", "icdiff", "pprintpp"],
+    install_requires=["pytest", "icdiff", "beeprint"],
     classifiers=[
         "Development Status :: 4 - Beta",
         "Framework :: Pytest",
