@@ -1,6 +1,6 @@
 # pylint: disable=inconsistent-return-statements
 import shutil
-from pprintpp import pformat
+import beeprint
 import icdiff
 
 AUTO_COLS = shutil.get_terminal_size().columns
@@ -13,6 +13,8 @@ MARGINS = MARGIN_L + GUTTER + 1
 #         f.write(' '.join(str(thing) for thing in things))
 #         f.write('\n')
 
+def pformat(*args, **kwargs) -> str:  # temporary wrapper to minimise diff
+    return str(beeprint.pp(*args, **kwargs, output=False))
 
 def pytest_addoption(parser):
     parser.addoption(
