@@ -23,7 +23,7 @@ Usage
 
 Once you've installed it, ``pytest`` will produce nice colourised diffs for any ``assert ==`` :
 
-.. image:: https://raw.githubusercontent.com/hjwp/pytest-icdiff/master/example_output.png?raw=true
+.. image:: https://raw.githubusercontent.com/hjwp/pytest-icdiff/main/example_output.png?raw=true
    :alt: example colourised diff
 
 Issues and PRs welcome.
