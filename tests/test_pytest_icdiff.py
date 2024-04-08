@@ -229,6 +229,19 @@ def test_long_lines_in_comparators_are_wrapped_sensibly_singleline(testdir):
     assert comparison_line.count("hell") < 15
 
 
+def test_mutliline_strings_have_no_escaped_newlines(testdir):
+    testdir.makepyfile(
+        """
+        def test_one():
+            one = "a\nb\nc\nd\ne\nf"
+            two = "a\nb\nc\nd\ne\nf\ng"
+            assert one == two"""
+    )
+    output = testdir.runpytest("-vv", "--color=yes").stdout.str()
+    assert "\\n" not in output
+    assert "\n" in output
+
+
 def test_columns_are_calculated_outside_hook(testdir):
     """
     ok for some reason if you get the TerminalWriter width

@@ -56,12 +56,6 @@ def pytest_addoption(parser):
         action="store_true",
         help="pytest-icdiff:  strip any trailing carriage return at the end of an input line",
     )
-    parser.addoption(
-        "--icdiff-multiline-string",
-        default=False,
-        action="store_true",
-        help="pytest-icdiff:  proper differences for multiline strings",
-    )
 
 
 def pytest_assertrepr_compare(config, op, left, right):
@@ -82,11 +76,7 @@ def pytest_assertrepr_compare(config, op, left, right):
     half_cols = COLS / 2 - MARGINS
     TABSIZE = int(config.getoption("--icdiff-tabsize") or 2)
 
-    if (
-        config.getoption("--icdiff-multiline-string")
-        and isinstance(left, str)
-        and isinstance(right, str)
-    ):
+    if isinstance(left, str) and isinstance(right, str):
         pretty_left = left.splitlines()
         pretty_right = right.splitlines()
     else:
