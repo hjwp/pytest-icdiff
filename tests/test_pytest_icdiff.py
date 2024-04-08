@@ -231,15 +231,17 @@ def test_long_lines_in_comparators_are_wrapped_sensibly_singleline(testdir):
 
 def test_mutliline_strings_have_no_escaped_newlines(testdir):
     testdir.makepyfile(
-        """
+        r"""
         def test_one():
-            one = "a\nb\nc\nd\ne\nf"
-            two = "a\nb\nc\nd\ne\nf\ng"
+            one = "a\nb\nc\nd"
+            two = "a\nb\nc\ndd"
             assert one == two"""
     )
     output = testdir.runpytest("-vv", "--color=yes").stdout.str()
-    assert "\\n" not in output
-    assert "\n" in output
+    print(repr(output))
+    assert "a" + " " * 36 in output
+    assert "b" + " " * 36 in output
+    assert "c" + " " * 36 in output
 
 
 def test_columns_are_calculated_outside_hook(testdir):
