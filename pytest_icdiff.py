@@ -76,8 +76,12 @@ def pytest_assertrepr_compare(config, op, left, right):
     half_cols = COLS / 2 - MARGINS
     TABSIZE = int(config.getoption("--icdiff-tabsize") or 2)
 
-    pretty_left = pformat(left, indent=TABSIZE, width=half_cols).splitlines()
-    pretty_right = pformat(right, indent=TABSIZE, width=half_cols).splitlines()
+    if isinstance(left, str) and isinstance(right, str):
+        pretty_left = left.splitlines()
+        pretty_right = right.splitlines()
+    else:
+        pretty_left = pformat(left, indent=TABSIZE, width=half_cols).splitlines()
+        pretty_right = pformat(right, indent=TABSIZE, width=half_cols).splitlines()
     diff_cols = COLS - MARGINS
 
     if len(pretty_left) < 3 or len(pretty_right) < 3:
