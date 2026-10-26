@@ -10,6 +10,23 @@ GREEN_ON = "\x1b[1;32m"
 ANSI_ESCAPE_RE = re.compile(r"(\x9B|\x1B\[)[0-?]*[ -/]*[@-~]")
 
 
+@pytest.mark.parametrize("cols", [0, 1, 26])
+@pytest.mark.parametrize("explicit", [False, True])
+def test_narrow_terminal_does_not_hang(testdir, cols, explicit):
+    testdir.makepyfile("def test_diff(): assert 'hello' * 20 == 'hallo' * 20")
+    testdir.makeconftest(f"import pytest_icdiff\npytest_icdiff.AUTO_COLS = {cols}")
+    args = ["-vv", "--color=yes"]
+    if explicit:
+        args.append(f"--icdiff-cols={cols}")
+
+    result = testdir.runpytest_subprocess(*args, timeout=5)
+
+    result.assert_outcomes(failed=1)
+    assert "equals failed" in result.stdout.str()
+    assert "hello" in strip_color_codes(result.stdout.str())
+    assert "hallo" in strip_color_codes(result.stdout.str())
+
+
 def test_short_dict(testdir):
     one = {
         1: "the number one",

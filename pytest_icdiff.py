@@ -73,6 +73,9 @@ def pytest_assertrepr_compare(config, op, left, right):
         return
 
     COLS = int(config.getoption("--icdiff-cols") or AUTO_COLS)
+    if COLS <= 2 * MARGINS:
+        # Leave room for both columns: non-positive wrap widths can loop forever.
+        COLS = 80
     half_cols = COLS / 2 - MARGINS
     TABSIZE = int(config.getoption("--icdiff-tabsize") or 2)
 
