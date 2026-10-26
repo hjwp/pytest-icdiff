@@ -1,4 +1,5 @@
 # pylint: disable=inconsistent-return-statements
+import re
 import shutil
 from pprintpp import pformat
 import icdiff
@@ -107,9 +108,9 @@ def pytest_assertrepr_compare(config, op, left, right):
     if not config.get_terminal_writer().hasmarkup:
         # colorization is disabled in Pytest - either due to the terminal not
         # supporting it or the user disabling it. We should obey, but there is
-        # no option in icdiff to disable it, so we replace its colorization
-        # function with a no-op
-        differ.colorize = lambda string: string
+        # no option in icdiff to disable it, so strip its internal diff markers
+        # instead of converting them to ANSI color codes.
+        differ.colorize = lambda string: re.sub(r"\x00[+^-]|\x01", "", string)
         color_off = ""
     else:
         color_off = icdiff.color_codes["none"]

@@ -10,6 +10,34 @@ GREEN_ON = "\x1b[1;32m"
 ANSI_ESCAPE_RE = re.compile(r"(\x9B|\x1B\[)[0-?]*[ -/]*[@-~]")
 
 
+@pytest.mark.parametrize("color_args", [("--color=no",), ()])
+@pytest.mark.parametrize(
+    "one,two",
+    [
+        ("hello", "hallo"),
+        ({"same": 1, "removed": 2}, {"same": 3, "added": 4}),
+        (list(range(100)), list(range(20)) + ["X"] + list(range(23, 100))),
+    ],
+)
+def test_plain_output_has_no_internal_diff_markers(testdir, color_args, one, two):
+    testdir.makepyfile(
+        f"""
+        def test_one():
+            assert {one!r} == {two!r}
+        """
+    )
+    testdir.monkeypatch.setenv("PY_COLORS", "0")
+
+    result = testdir.runpytest("-vv", *color_args)
+
+    result.assert_outcomes(failed=1)
+    output = result.stdout.str()
+    assert "equals failed" in output
+    assert "\x00" not in output
+    assert "\x01" not in output
+    assert ANSI_ESCAPE_RE.search(output) is None
+
+
 def test_short_dict(testdir):
     one = {
         1: "the number one",
